@@ -1,95 +1,110 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+
+import { FaQuoteLeft, FaTwitter, FaTumblr } from "react-icons/fa";
+
+import "./styles.css";
+
+const randomQuote = () => {
+  const [data, setData] = useState(null);
+  const [quotes, setQuotes] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      await fetch(
+        "https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json"
+      )
+        .then((x) => x.json())
+        .then((data) => setQuotes(data?.quotes))
+        .catch((err) => console.log(err));
+    }
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (quotes) changeText();
+  }, [quotes]);
+
+  const generateHexaColor = () => {
+    const letrasHex = "0123456789ABCDEF";
+    let color = "#";
+
+    for (let i = 0; i < 6; i++) {
+      color += letrasHex[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  const changeText = () => {
+    changeColor();
+
+    const index = Math.floor(Math.random() * quotes.length);
+    const randomElement = quotes[index];
+
+    setData(randomElement);
+  };
+
+  const changeColor = () => {
+    const randomColor = generateHexaColor();
+
+    const contentBg = document.getElementById("content");
+    const tmblrBg = document.getElementById("tmblr-quote");
+    const tweetBg = document.getElementById("tweet-quote");
+    const newBg = document.getElementById("new-quote");
+
+    contentBg.style.background = randomColor;
+    tmblrBg.style.background = randomColor;
+    tweetBg.style.background = randomColor;
+    newBg.style.background = randomColor;
+
+    document.body.style.backgroundColor = randomColor;
+
+    const quoteClr = document.getElementById("quote-box");
+    quoteClr.style.color = randomColor;
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <div id="content">
+      {quotes && (
+        <>
+          <div id="quote-box">
+            <p id="text">
+              <FaQuoteLeft /> {data?.quote}
+            </p>
+            <p id="author">- {data?.author}</p>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+            <div className="content-btns">
+              <div className="content-icons">
+                <a
+                  id="tweet-quote"
+                  target="_blank"
+                  href={`https://twitter.com/intent/tweet?hashtags=quotes&text="${data?.quote}"${data?.author}`}
+                >
+                  <FaTwitter />
+                </a>
+                <a
+                  id="tmblr-quote"
+                  target="_blank"
+                  href={`https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=quotes
+                      &caption=${data?.author}&content=${data?.quote}
+                      &canonicalUrl=https://www.tumblr.com&shareSource=tumblr_share_button
+                  `}
+                >
+                  <FaTumblr />
+                </a>
+              </div>
+              <button id="new-quote" onClick={changeText}>
+                New quote
+              </button>
+            </div>
+          </div>
+          <div className="footer">by humber</div>
+        </>
+      )}
+    </div>
+  );
+};
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+export default randomQuote;
