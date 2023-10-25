@@ -98,7 +98,7 @@ const RandomQuote = () => {
               </button>
             </div>
           </div>
-          <div className="footer">by humber</div>
+          <div className="footer">by Humberto</div>
         </>
       )}
     </div>
