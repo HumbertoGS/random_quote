@@ -6,7 +6,7 @@ import { FaQuoteLeft, FaTwitter, FaTumblr } from "react-icons/fa";
 
 import "./styles.css";
 
-const randomQuote = () => {
+const RandomQuote = () => {
   const [data, setData] = useState(null);
   const [quotes, setQuotes] = useState(null);
 
@@ -105,4 +105,4 @@ const randomQuote = () => {
   );
 };
 
-export default randomQuote;
+export default RandomQuote;
