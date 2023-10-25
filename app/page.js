@@ -49,12 +49,10 @@ const randomQuote = () => {
   const changeColor = () => {
     const randomColor = generateHexaColor();
 
-    const contentBg = document.getElementById("content");
     const tmblrBg = document.getElementById("tmblr-quote");
     const tweetBg = document.getElementById("tweet-quote");
     const newBg = document.getElementById("new-quote");
 
-    contentBg.style.background = randomColor;
     tmblrBg.style.background = randomColor;
     tweetBg.style.background = randomColor;
     newBg.style.background = randomColor;
